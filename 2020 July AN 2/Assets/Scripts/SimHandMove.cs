@@ -8,7 +8,7 @@ public class SimHandMove : MonoBehaviour
     public Vector3 location;
     public float moveSpeed;
     public float turnSpeed;
-
+    public float sprint;
     void Start()
     {
         
@@ -36,7 +36,15 @@ public class SimHandMove : MonoBehaviour
             transform.Translate(Vector3.right * Time.deltaTime * moveSpeed);
         }
 
-        // HOMEWORK: using SHIFT to sprint
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            moveSpeed *= sprint;
+            Babushka();
+        }
+        else if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            moveSpeed /= sprint;
+        }
 
         #endregion
 
@@ -65,9 +73,8 @@ public class SimHandMove : MonoBehaviour
 
         #region rotation using mouse
 
-        transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * turnSpeed);
-
-        // HOMEWORK: rotate up and down using the mouse
+        transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * turnSpeed, Space.Self);
+        transform.Rotate(Vector3.up * Input.GetAxis("Mouse Y") * turnSpeed, Space.Self);
 
         #endregion
 
@@ -75,7 +82,7 @@ public class SimHandMove : MonoBehaviour
 
     public void Babushka()
     {
-
+        Debug.Log("BABA YAGA");
     }
 }
 
