@@ -46,6 +46,8 @@ public class SimHandMove : MonoBehaviour
             moveSpeed /= sprint;
         }
 
+        // HOMEWORK: Jump!
+
         #endregion
 
         #region rotation using the keyboard
