@@ -46,7 +46,16 @@ public class SimHandMove : MonoBehaviour
             moveSpeed /= sprint;
         }
 
+        if (Input.GetKey(KeyCode.Space))
+        {
+            transform.Translate(Vector3.up * Time.deltaTime * moveSpeed);
+        }
+        if (Input.GetKey(KeyCode.LeftControl))
+        {
+            transform.Translate(Vector3.down * Time.deltaTime * moveSpeed);
+        }
         // HOMEWORK: Jump!
+
 
         #endregion
 

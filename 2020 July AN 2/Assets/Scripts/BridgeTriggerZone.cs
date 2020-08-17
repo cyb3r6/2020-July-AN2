@@ -6,7 +6,7 @@ public class BridgeTriggerZone : MonoBehaviour
 {
     public Animator bridgeAnimator;
 
-    private void OnTriggerStay(Collider theOtherGameObjectWeCollidedWith)
+    private void OnTriggerEnter(Collider theOtherGameObjectWeCollidedWith)
     {
         if(theOtherGameObjectWeCollidedWith.tag == "Player")
         {
