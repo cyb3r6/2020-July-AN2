@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class VRInput : MonoBehaviour
 {
-    public bool isLeftHand;     // if true, left controller
+    public bool isLeftHand;             // if true, left controller
     public float gripValue;
 
     private string gripAxis;    
     
     void Awake()
     {
-        if (isLeftHand)
+        if (isLeftHand)                 // shorthand for isLeftHand == true
         {
             gripAxis = "LeftGrip";
         }
