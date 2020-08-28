@@ -8,7 +8,7 @@ public class SimHandAnimator : MonoBehaviour
 
     void Start()
     {
-        simHandAnim = GetComponent<Animator>();
+        simHandAnim = GetComponentInChildren<Animator>();
     }
 
     void Update()
