@@ -53,6 +53,7 @@ public class SimHandGrab : MonoBehaviour
         heldObject.transform.SetParent(snapPosition);
         heldObject.transform.localPosition = Vector3.zero;                  // (0,0,0)
         heldObject.transform.localRotation = Quaternion.identity;           // (0,0,0,0)
+
         heldObject.GetComponent<Rigidbody>().isKinematic = true;
     }
 
