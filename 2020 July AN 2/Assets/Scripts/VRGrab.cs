@@ -9,6 +9,9 @@ public class VRGrab : MonoBehaviour
     public GameObject collidingObject;      // what we're touching
     public GameObject heldObject;           // what we're holding
 
+    [Range(1, 100)]
+    public float throwForce = 1f;
+
     private void OnTriggerEnter(Collider otherThingWeTouched)
     {
         collidingObject = otherThingWeTouched.gameObject;       // saving what we're touching
@@ -47,6 +50,15 @@ public class VRGrab : MonoBehaviour
                 Release();
             }
         }
+
+        #region Interaction Method 1
+
+        if (controller.triggerValue > 0.8f && heldObject)
+        {
+            heldObject.BroadcastMessage("Interaction");
+        }
+
+        #endregion
     }
 
     private void Grab()
@@ -57,8 +69,14 @@ public class VRGrab : MonoBehaviour
 
     private void Release()
     {
+        // throw
+        Rigidbody rb = heldObject.GetComponent<Rigidbody>();
+        rb.velocity = controller.handVelocity * throwForce;
+        rb.angularVelocity = controller.handAngularVelocity * throwForce;
+
+        // reset held object
         heldObject.transform.SetParent(null);
-        heldObject.GetComponent<Rigidbody>().isKinematic = false;
+        rb.isKinematic = false;
         heldObject = null;
     }
 }

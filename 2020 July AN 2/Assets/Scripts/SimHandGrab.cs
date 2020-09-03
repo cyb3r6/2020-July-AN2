@@ -8,6 +8,15 @@ public class SimHandGrab : MonoBehaviour
     public GameObject heldObject;           // what we're holding
     public Transform snapPosition;
 
+    [Range(1, 100)]
+    public float throwForce = 1f;
+
+    private Vector3 handVelocity;
+    private Vector3 previousPosition;
+
+    private Vector3 handAngularVelocity;
+    private Vector3 previousAngularRotation;
+
     private void OnTriggerEnter(Collider otherThingWeTouched)
     {
         collidingObject = otherThingWeTouched.gameObject;       // saving what we're touching
@@ -26,7 +35,7 @@ public class SimHandGrab : MonoBehaviour
         
     }
 
-    
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Mouse1))
@@ -36,7 +45,7 @@ public class SimHandGrab : MonoBehaviour
                 heldObject = collidingObject;
 
                 // do the grab!
-                Grab();                
+                Grab();
             }
         }
         if (Input.GetKeyUp(KeyCode.Mouse1))
@@ -46,6 +55,21 @@ public class SimHandGrab : MonoBehaviour
                 Release();
             }
         }
+
+        #region Interaction Method 1
+
+        if (Input.GetKeyDown(KeyCode.Mouse0) && heldObject)
+        {
+            heldObject.BroadcastMessage("Interaction");
+        }
+
+        #endregion
+
+        handVelocity = (this.transform.position - previousPosition) / Time.deltaTime;
+        previousPosition = this.transform.position;
+
+        handAngularVelocity = (this.transform.eulerAngles - previousAngularRotation) / Time.deltaTime;
+        previousAngularRotation = this.transform.eulerAngles;
     }
 
     private void Grab()
@@ -58,9 +82,15 @@ public class SimHandGrab : MonoBehaviour
     }
 
     private void Release()
-    {        
+    {
+        // throw
+        Rigidbody rb = heldObject.GetComponent<Rigidbody>();
+        rb.velocity = handVelocity * throwForce;
+        rb.angularVelocity = handAngularVelocity * throwForce;
+
+        // reset held object
         heldObject.transform.SetParent(null);
-        heldObject.GetComponent<Rigidbody>().isKinematic = false;
+        rb.isKinematic = false;
         heldObject = null;
     }
 }
