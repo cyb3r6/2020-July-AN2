@@ -58,10 +58,10 @@ public class SimHandGrab : MonoBehaviour
 
         #region Interaction Method 1
 
-        if (Input.GetKeyDown(KeyCode.Mouse0) && heldObject)
-        {
-            heldObject.BroadcastMessage("Interaction");
-        }
+        //if (Input.GetKeyDown(KeyCode.Mouse0) && heldObject)
+        //{
+        //    heldObject.BroadcastMessage("Interaction");
+        //}
 
         #endregion
 
@@ -77,12 +77,33 @@ public class SimHandGrab : MonoBehaviour
         heldObject.transform.SetParent(snapPosition);
         heldObject.transform.localPosition = Vector3.zero;                  // (0,0,0)
         heldObject.transform.localRotation = Quaternion.identity;           // (0,0,0,0)
-
         heldObject.GetComponent<Rigidbody>().isKinematic = true;
+
+        #region Interaction Method 2
+
+        var grabbable = heldObject.GetComponent<GrabbableObjectSimHand>();
+        if (grabbable)
+        {
+            grabbable.simHandGrab = this;
+            grabbable.isBeingHeld = true;
+        }
+
+        #endregion
     }
 
     private void Release()
     {
+        #region Interaction Method 2
+
+        var grabbable = heldObject.GetComponent<GrabbableObjectSimHand>();
+        if (grabbable)
+        {
+            grabbable.simHandGrab = null;
+            grabbable.isBeingHeld = false;
+        }
+
+        #endregion
+
         // throw
         Rigidbody rb = heldObject.GetComponent<Rigidbody>();
         rb.velocity = handVelocity * throwForce;
