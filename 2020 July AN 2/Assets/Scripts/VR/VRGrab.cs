@@ -40,7 +40,7 @@ public class VRGrab : MonoBehaviour
         {
             gripHeld = true;
 
-            if (collidingObject)
+            if (collidingObject && collidingObject.GetComponent<Rigidbody>())
             {
                 heldObject = collidingObject;
 
