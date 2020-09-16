@@ -5,7 +5,6 @@ using UnityEngine;
 public class FlashlightSimHand : GrabbableObjectSimHand
 {
     private Light flashLight;
-
     void Start()
     {
         flashLight = GetComponentInChildren<Light>();
