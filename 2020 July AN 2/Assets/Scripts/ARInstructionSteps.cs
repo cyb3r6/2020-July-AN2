@@ -20,7 +20,7 @@ public class ARInstructionSteps : MonoBehaviour
 
         instructionSteps.Clear();
 
-        for(int i = 0; i < initializeHeatCanvas.transform.childCount - 1; i++)
+        for(int i = 0; i < initializeHeatCanvas.transform.childCount - 2; i++)
         {
             instructionSteps.Add(initializeHeatCanvas.transform.GetChild(i).gameObject);
             Debug.Log("the instuction steps are: " + instructionSteps[i]);
@@ -36,7 +36,7 @@ public class ARInstructionSteps : MonoBehaviour
 
         instructionSteps.Clear();
 
-        for (int i = 0; i < saltWaterCanvas.transform.childCount - 1; i++)
+        for (int i = 0; i < saltWaterCanvas.transform.childCount - 2; i++)
         {
             instructionSteps.Add(saltWaterCanvas.transform.GetChild(i).gameObject);
         }
@@ -64,6 +64,16 @@ public class ARInstructionSteps : MonoBehaviour
     // HOMEWORK!
     public void PreviousStep()
     {
+        instructionSteps[currentStep].SetActive(false);
 
+        if(currentStep <= 0)
+        {
+            currentStep = 0;
+            instructionSteps[currentStep].SetActive(true);
+
+            return;
+        }
+
+        instructionSteps[--currentStep].SetActive(true);
     }
 }

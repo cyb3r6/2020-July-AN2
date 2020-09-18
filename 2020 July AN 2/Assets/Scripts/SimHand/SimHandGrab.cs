@@ -45,14 +45,16 @@ public class SimHandGrab : MonoBehaviour
                 heldObject = collidingObject;
 
                 // do the grab!
-                Grab();
+                //Grab();
+                AdvGrab();
             }
         }
         if (Input.GetKeyUp(KeyCode.Mouse1))
         {
             if (heldObject)
             {
-                Release();
+                //Release();
+                AdvRelease();
             }
         }
 
@@ -112,6 +114,52 @@ public class SimHandGrab : MonoBehaviour
         // reset held object
         heldObject.transform.SetParent(null);
         rb.isKinematic = false;
+        heldObject = null;
+    }
+
+    private void AdvGrab()
+    {
+        // create the fixed joint!
+        FixedJoint fixedJoint = this.gameObject.AddComponent<FixedJoint>();
+        fixedJoint.breakForce = 2000;
+        fixedJoint.breakTorque = 2000;
+        fixedJoint.connectedBody = heldObject.GetComponent<Rigidbody>();
+
+        #region Interaction Method 2
+
+        var grabbable = heldObject.GetComponent<GrabbableObjectSimHand>();
+        if (grabbable)
+        {
+            grabbable.simHandGrab = this;
+            grabbable.isBeingHeld = true;
+        }
+
+        #endregion
+    }
+
+    private void AdvRelease()
+    {
+        #region Interaction Method 2
+
+        var grabbable = heldObject.GetComponent<GrabbableObjectSimHand>();
+        if (grabbable)
+        {
+            grabbable.simHandGrab = null;
+            grabbable.isBeingHeld = false;
+        }
+
+        #endregion
+
+        if (GetComponent<FixedJoint>())
+        {
+            Destroy(GetComponent<FixedJoint>());
+
+            // throw
+            Rigidbody rb = heldObject.GetComponent<Rigidbody>();
+            rb.velocity = handVelocity * throwForce;
+            rb.angularVelocity = handAngularVelocity * throwForce;
+        }
+
         heldObject = null;
     }
 }

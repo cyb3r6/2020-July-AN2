@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class VRGrab : MonoBehaviour
 {
-    [HideInInspector] 
+    [HideInInspector]
     public VRInput controller;
 
     public GameObject collidingObject;      // what we're touching
@@ -33,10 +33,10 @@ public class VRGrab : MonoBehaviour
         controller = GetComponent<VRInput>();
     }
 
-    
+
     void Update()
     {
-        if(controller.gripValue > 0.8f && gripHeld == false)
+        if (controller.gripValue > 0.8f && gripHeld == false)
         {
             gripHeld = true;
 
@@ -45,7 +45,8 @@ public class VRGrab : MonoBehaviour
                 heldObject = collidingObject;
 
                 // do the grab!
-                Grab();
+                //Grab();
+                AdvGrab();
             }
         }
         if (controller.gripValue < 0.8f && gripHeld == true)
@@ -54,7 +55,8 @@ public class VRGrab : MonoBehaviour
 
             if (heldObject)
             {
-                Release();
+                //Release();
+                AdvRelease();
             }
         }
 
@@ -109,6 +111,53 @@ public class VRGrab : MonoBehaviour
         // reset held object
         heldObject.transform.SetParent(null);
         rb.isKinematic = false;
+        heldObject = null;
+    }
+
+    private void AdvGrab()
+    {
+        // create the fixed joint!
+        FixedJoint fixedJoint = this.gameObject.AddComponent<FixedJoint>();
+        fixedJoint.breakForce = 2000;
+        fixedJoint.breakTorque = 2000;
+        fixedJoint.connectedBody = heldObject.GetComponent<Rigidbody>();
+
+        #region Interaction Method 2
+
+        var grabbable = heldObject.GetComponent<GrabbableObjectVR>();
+        if (grabbable)
+        {
+            grabbable.controller = controller;
+            grabbable.isBeingHeld = true;
+        }
+
+        #endregion
+
+    }
+
+    private void AdvRelease()
+    {
+        #region Interaction Method 2
+
+        var grabbable = heldObject.GetComponent<GrabbableObjectVR>();
+        if (grabbable)
+        {
+            grabbable.controller = null;
+            grabbable.isBeingHeld = false;
+        }
+
+        #endregion
+
+        if (GetComponent<FixedJoint>())
+        {
+            Destroy(GetComponent<FixedJoint>());
+
+            // throw
+            Rigidbody rb = heldObject.GetComponent<Rigidbody>();
+            rb.velocity = controller.handVelocity * throwForce;
+            rb.angularVelocity = controller.handAngularVelocity * throwForce;
+        }
+
         heldObject = null;
     }
 }
