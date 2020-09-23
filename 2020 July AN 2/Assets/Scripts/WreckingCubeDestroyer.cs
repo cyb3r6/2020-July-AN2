@@ -9,6 +9,7 @@ public class WreckingCubeDestroyer : MonoBehaviour
         if(other.tag == "WreckingCube")
         {
             other.GetComponent<Renderer>().enabled = false;
+            GameManager.instance.CountCubesDestroyed();
         }
     }
 }
