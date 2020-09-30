@@ -5,5 +5,6 @@ using UnityEngine;
 public class GrabbableObjectVR : MonoBehaviour
 {
     public VRInput controller;
-    public bool isBeingHeld;   
+    public bool isBeingHeld;
+    private bool enable;
 }
